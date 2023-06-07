@@ -1,0 +1,55 @@
+.todo-container{
+    width: 100%;
+    height: 100vh;
+    padding: 50px;
+    
+    
+}
+.todo-top{
+    justify-content: center;
+    
+}
+.todo-heading{
+font-size: 50px;
+
+}
+.logout{
+    position: absolute;
+    left: 90%;
+    float: right;
+
+}
+.todo-input-container{
+    padding: 30px;
+    justify-content: center;
+}
+.todo-input{
+    margin-right: 10px;
+    padding: 5px;
+    width: 70%;
+}
+.todo-main{
+    justify-content: center;
+}
+.todo-list{
+   width: 69%;
+}
+.todo-text{
+    overflow-x: hidden;
+}
+.todo-item{
+    margin: 10px;
+    border-radius: 20px;
+    padding: 5px 5px 5px 10px;
+    display: flex;
+    justify-content:space-between;
+     
+    background-color: rgb(123, 128, 128);
+}
+.btns{
+    margin-left: 5px;
+    width:50px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}

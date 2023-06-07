@@ -1,0 +1,14 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+*{
+  padding: 0;
+  margin: 0;
+  font-family: Poppins;
+
+}
+body{
+  height: 100vh;
+  width: 100%;
+  color:whitesmoke;
+  background-color: rgb(44, 41, 41);
+}

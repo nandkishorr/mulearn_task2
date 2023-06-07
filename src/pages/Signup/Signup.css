@@ -1,0 +1,30 @@
+.sign-main{
+    height: 100vh;
+    width: 100%;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.sign-box{
+    
+    padding: 50px;
+    border-radius: 20px;
+    margin: 100px;
+    max-width:600px;
+    min-height: 400px;
+    background-color: rgb(123, 128, 128);
+}
+form{
+    justify-content: center;
+    align-items: center;
+}
+input{
+    margin-left: 20px;
+    min-width: 300px;
+}
+input:focus,button:focus{
+    outline: none;
+
+}
+.signbtn{
+    margin-left: 15%;
+}

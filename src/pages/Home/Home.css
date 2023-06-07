@@ -1,0 +1,40 @@
+.home{
+    padding: 50px;
+    height: 100vh;
+    width: 100%;
+    justify-content: space-evenly;
+   
+}
+.home-top{
+    align-items: center;
+}
+.top-heading{
+    font-size: 5rem;
+    font-weight: 700;
+}
+.home-main{
+    padding: 30px;
+    margin: 100px;
+    max-width: 500px;
+    min-height: 500px;
+    border-radius: 20px;
+    background-color: rgb(123, 128, 128);
+}
+.main-top{
+    width: 100%;
+    font-weight: 700;
+    justify-content: center;
+}
+button{
+    width:100px;
+     border-radius: 15px;  
+     border: none;
+     height: 30px; 
+}
+.main-content{
+
+}
+.main-bottom{
+    width: 100%;
+    justify-content: space-between;
+}
