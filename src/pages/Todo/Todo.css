@@ -5,6 +5,10 @@
     
     
 }
+.container-top{
+    padding: 15px;
+    background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0)),url('http://www.incomeactivator.com/images/freebg5.jpg');
+}
 .todo-top{
     justify-content: center;
     

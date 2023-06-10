@@ -2,7 +2,7 @@
 import {useNavigate} from "react-router-dom"
 import "./Home.css"
 import { BsCheck2Circle } from 'react-icons/bs';
-import Sidetitle from '../../Componens/Sidetitle';
+import Sidetitle from '../../Components/Sidetitle';
 function Home() {
   const navigate = useNavigate();
   const ToLogin = () => {

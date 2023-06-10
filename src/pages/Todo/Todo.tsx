@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { AiOutlinePoweroff ,AiOutlineFolderAdd,AiOutlineDelete} from 'react-icons/ai';
-import{GrSave} from 'react-icons/gr';
-import{FcCancel}from'react-icons/fc';
-import"./Todo.css"
+import { AiOutlinePoweroff, AiOutlineFolderAdd, AiOutlineDelete } from 'react-icons/ai';
+import { GrSave } from 'react-icons/gr';
+import { FcCancel } from 'react-icons/fc';
+import "./Todo.css";
 import { BsCheck2Circle } from 'react-icons/bs';
-import {GrUpdate} from 'react-icons/gr';
+import { GrUpdate } from 'react-icons/gr';
 
 interface Todo {
   id: number;
-  text: string;
+  title: string;
   completed: boolean;
 }
 
@@ -22,112 +22,161 @@ const Todo = ({ handleLogout }: TodoProps) => {
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
 
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem('todos') || '[]');
-    setTodos(storedTodos);
+    fetchTodos();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }, [todos]);
+  const fetchTodos = async () => {
+    try {
+      const response = await fetch('https://mulearn-internship-task-production.up.railway.app/api/todo/', {
+        method: 'GET', 
+      headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        
+      });
+      if (response.ok) {
+        const todosData = await response.json();
+        const todosWithId = todosData.map((todo: Todo) => ({
+          id: todo.id,
+          title: todo.title,
+          completed: todo.completed,
+        }));
+        setTodos(todosWithId);
+      } else {
+        throw new Error('Failed to fetch todos');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const addTodo = () => {
+  const createTodo = async () => {
     if (newTodo.trim() === '') return;
-    const todo: Todo = {
-      id: Date.now(),
-      text: newTodo,
-      completed: false,
-    };
-    setTodos([...todos, todo]);
-    setNewTodo('');
+    try {
+      const response = await fetch('https://mulearn-internship-task-production.up.railway.app/api/todo/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        body: JSON.stringify({ title: newTodo }),
+      });
+      if (response.ok) {
+        const createdTodo = await response.json();
+        setTodos([...todos, createdTodo]);
+        setNewTodo('');
+      } else {
+        throw new Error('Failed to create todo');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const deleteTodo = (id: number) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
+  const deleteTodo = async (id: number) => {
+    try {
+      const response = await fetch(`https://mulearn-internship-task-production.up.railway.app/api/todo/${id}/`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      });
+      if (response.ok) {
+        const updatedTodos = todos.filter((todo) => todo.id !== id);
+        setTodos(updatedTodos);
+      } else {
+        throw new Error('Failed to delete todo');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const toggleTodoStatus = (id: number) => {
+  const toggleTodoStatus = async (id: number) => {
     const updatedTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
     setTodos(updatedTodos);
+
+    try {
+      const response = await fetch(`https://mulearn-internship-task-production.up.railway.app/api/todo/${id}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+        
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update todo status');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const updateTodo = () => {
-    if (newTodo.trim() === '') return;
-    const updatedTodos = todos.map((todo) =>
-      todo.id === selectedTodo!.id ? { ...todo, text: newTodo } : todo
-    );
-    setTodos(updatedTodos);
-    setSelectedTodo(null);
-    setNewTodo('');
-  };
-
-  const cancelUpdate = () => {
-    setSelectedTodo(null);
-    setNewTodo('');
-  };
 
   return (
     <div className="todo-container container-fluid">
-     <div className='logout'><AiOutlinePoweroff  size='2em' onClick={handleLogout}/></div>
-     <div className='d-flex todo-top'> 
-     <h2 className='todo-heading '>ToDos</h2><BsCheck2Circle/></div>
-     
-      <div className="todo-input-container d-flex">
-        {selectedTodo ? (
-          <>
-            <input
-              type="text"
-              placeholder="Update Todo"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)}
-              className="todo-input"
-            />
-          <GrSave size='2em' color='white' cursor='pointer' onClick={updateTodo}/>
-          <FcCancel size='2em' color='white' cursor='pointer' onClick={cancelUpdate}/>
-          </>
-        ) : (
-          <>
-            <input
-              type="text"
-              placeholder="New Todo"
-              value={newTodo}
-              onChange={(e) => setNewTodo(e.target.value)}
-              className="todo-input"
-            />
-          <AiOutlineFolderAdd size='30px' color='white' cursor='pointer' onClick={addTodo}/>
-          </>
-        )}
+      <div className='container-top'>
+        <div className='logout'>
+          <AiOutlinePoweroff size='2em' onClick={handleLogout} />
+        </div>
+        <div className='d-flex todo-top'>
+          <h2 className='todo-heading'>ToDos</h2>
+          <BsCheck2Circle />
+        </div>
+        <div className="todo-input-container d-flex">
+          {selectedTodo ? (
+            <>
+              <input
+                type="text"
+                placeholder="Update Todo"
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+                className="todo-input"
+              />
+            </>
+          ) : (
+            <>
+              <input
+                type="text"
+                placeholder="New Todo"
+                value={newTodo}
+                onChange={(e) => setNewTodo(e.target.value)}
+                className="todo-input"
+              />
+              <AiOutlineFolderAdd size='30px' color='white' cursor='pointer' onClick={createTodo} />
+            </>
+          )}
+        </div>
       </div>
       <div className="todo-main d-flex">
         <ul className='todo-list'>
-        {todos.map((todo) => (
-          <li
-            key={todo.id}
-            className={`todo-item ${todo.completed ? 'completed' : ''}`}
-          >
-            <span
-              onClick={() => toggleTodoStatus(todo.id)}
-              className="todo-text"
+          {todos.map((todo) => (
+            <li
+              key={todo.id}
+              className={`todo-item ${todo.completed ? 'completed' : ''}`}
             >
-              {todo.text}
-            </span>
-            {!selectedTodo ? (
-             <div className='btns'><GrUpdate size="20px"onClick={() => setSelectedTodo(todo)}/>
-             <AiOutlineDelete size="25px" color="red"onClick={() => deleteTodo(todo.id)}/></div> 
-            ) : (
-             <GrUpdate  disabled size="20px"onClick={() => setSelectedTodo(todo)}/>
-            )}
-           
-          </li>
-        ))}
-      
-      
-    </ul></div>
-      
+              <span
+                onClick={() => toggleTodoStatus(todo.id)}
+                className="todo-text"
+              >
+                {todo.title}
+              </span>
+              {!selectedTodo ? (
+                <div className='btns'>
+                  <GrUpdate size="20px" onClick={() => setSelectedTodo(todo)} />
+                  <AiOutlineDelete size="25px" color="red" onClick={() => deleteTodo(todo.id)} />
+                </div>
+              ) : (
+                <GrUpdate disabled size="20px" onClick={() => setSelectedTodo(todo)} />
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
-    
   );
 };
 
