@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlinePoweroff, AiOutlineFolderAdd, AiOutlineDelete } from 'react-icons/ai';
-import { GrSave } from 'react-icons/gr';
-import { FcCancel } from 'react-icons/fc';
+
 import "./Todo.css";
 import { BsCheck2Circle } from 'react-icons/bs';
 import { GrUpdate } from 'react-icons/gr';
